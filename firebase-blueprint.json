@@ -1,0 +1,528 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Private user account profile stored per authenticated UID.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "minLength": 3,
+          "maxLength": 254
+        },
+        "jobTitle": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "department": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "bio": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 500
+        },
+        "avatarColor": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "minLength": 7,
+          "maxLength": 7
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "email", "jobTitle", "department", "bio", "avatarColor", "createdAt", "updatedAt"]
+    },
+    "EmailDirectoryEntry": {
+      "title": "EmailDirectoryEntry",
+      "description": "Non-PII exact-hash directory record for resolving registered teammates by exact email hash.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "jobTitle": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "avatarColor": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "minLength": 7,
+          "maxLength": 7
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "jobTitle", "avatarColor", "updatedAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Workspace project owned by a user and shared with authorized members.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Active", "On Hold", "Completed"]
+        },
+        "ownerId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "ownerName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "startDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "minLength": 10,
+          "maxLength": 10
+        },
+        "endDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "minLength": 10,
+          "maxLength": 10
+        },
+        "memberIds": {
+          "type": "array",
+          "description": "Bounded list (1-25) of authorized project member UIDs."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "name", "description", "status", "ownerId", "ownerName", "startDate", "endDate", "memberIds", "createdAt", "updatedAt"]
+    },
+    "ProjectMember": {
+      "title": "ProjectMember",
+      "description": "Membership record mapping a user and role to a project.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 260
+        },
+        "projectId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectOwnerId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "memberName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "memberTitle": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "avatarColor": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "minLength": 7,
+          "maxLength": 7
+        },
+        "role": {
+          "type": "string",
+          "enum": ["owner", "member"]
+        },
+        "projectMemberIds": {
+          "type": "array",
+          "description": "Bounded list (1-25) of project member UIDs for authorized queries."
+        },
+        "addedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "projectId", "projectOwnerId", "userId", "memberName", "memberTitle", "avatarColor", "role", "projectMemberIds", "addedBy", "createdAt", "updatedAt"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Project task tracked on the Kanban board, list, and calendar.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectOwnerId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectMemberIds": {
+          "type": "array",
+          "description": "Bounded list (1-25) of authorized project member UIDs."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 3000
+        },
+        "status": {
+          "type": "string",
+          "enum": ["To Do", "In Progress", "Completed"]
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["Low", "Medium", "High"]
+        },
+        "dueDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "minLength": 10,
+          "maxLength": 10
+        },
+        "assigneeId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 128
+        },
+        "assigneeName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "attachments": {
+          "type": "array",
+          "description": "Bounded list (0-10) of task link attachments."
+        },
+        "createdBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "projectId", "projectOwnerId", "projectMemberIds", "title", "description", "status", "priority", "dueDate", "assigneeId", "assigneeName", "attachments", "createdBy", "createdAt", "updatedAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Task comment or project-level team discussion post.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectOwnerId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectMemberIds": {
+          "type": "array",
+          "description": "Bounded list (1-25) of authorized project member UIDs."
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 128
+        },
+        "scope": {
+          "type": "string",
+          "enum": ["task", "discussion"]
+        },
+        "authorId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "authorName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "projectId", "projectOwnerId", "projectMemberIds", "taskId", "scope", "authorId", "authorName", "body", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Event-driven user notification for task assignments, status changes, comments, and team additions.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "recipientId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "actorId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "actorName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "projectId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 128
+        },
+        "type": {
+          "type": "string",
+          "enum": ["task_assigned", "task_status", "comment_added", "member_added", "project_updated"]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "read": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "recipientId", "actorId", "actorName", "projectId", "taskId", "type", "title", "message", "read", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Immutable audit trail entry for project, task, member, and comment activity.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectOwnerId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "projectMemberIds": {
+          "type": "array",
+          "description": "Bounded list (1-25) of authorized project member UIDs."
+        },
+        "entityType": {
+          "type": "string",
+          "enum": ["project", "task", "member", "comment"]
+        },
+        "entityId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "details": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "actorId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "actorName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "projectId", "projectOwnerId", "projectMemberIds", "entityType", "entityId", "action", "details", "actorId", "actorName", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Private user account profiles."
+    },
+    "/emailDirectory/{emailHash}": {
+      "schema": { "$ref": "#/entities/EmailDirectoryEntry" },
+      "description": "Non-PII exact-hash lookup directory for inviting teammates."
+    },
+    "/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "Workspace projects."
+    },
+    "/projectMembers/{memberId}": {
+      "schema": { "$ref": "#/entities/ProjectMember" },
+      "description": "Project team memberships and roles."
+    },
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/Task" },
+      "description": "Project tasks."
+    },
+    "/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/Comment" },
+      "description": "Task comments and project team discussions."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "User notifications."
+    },
+    "/activityLogs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Project and task activity logs."
+    }
+  }
+}
